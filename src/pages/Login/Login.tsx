@@ -3,6 +3,7 @@ import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { useState } from 'react';
 import { login } from '../../api/authApi';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
     const [form, setForm] = useState({
@@ -72,10 +73,10 @@ export default function Login() {
 
                             <div className="mt-4 flex items-center justify-start gap-x-2">
                                 <Button variant="secondary" as="a" href="/register">
-                                    Register
+                                    <Link to="/register">Register</Link>
                                 </Button>
                                 <Button type="submit" variant="primary">
-                                    Log in
+                                    <Link to="">Log in</Link>
                                 </Button>
                             </div>
                         </form>
