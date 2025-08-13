@@ -1,4 +1,10 @@
-export default function Input({ type, name, label }) {
+interface InputProps {
+    type: 'text' | 'password';
+    name: string;
+    label: string;
+}
+
+export default function Input({ type, name, label }: InputProps) {
     return (
         <div className="mt-4">
             <div>
