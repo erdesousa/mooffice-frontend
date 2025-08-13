@@ -1,11 +1,8 @@
-import './index.css'
+import './styles/index.css';
+import Login from "./pages/Login/Login"
 
 function App() {
-  return (
-    <>
-      <h1>Hello, eric</h1>
-    </>
-  )
+  return <Login />
 }
 
 export default App
