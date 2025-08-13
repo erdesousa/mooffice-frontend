@@ -1,8 +1,36 @@
 import logo from '../../assets/Group 2260.svg';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
+import { useState } from 'react';
+import { login } from '../../api/authApi';
 
 export default function Login() {
+    const [form, setForm] = useState({
+        email: '',
+        senha: ''
+    });
+
+    const [error, setError] = useState<string | null>(null);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError(null);
+        try {
+            const response = await login(form);
+            // Faça o que quiser com response (ex: salvar usuário, redirecionar, etc)
+            console.log('Login realizado:', response);
+        } catch (err: any) {
+            setError(err.message || 'Erro ao fazer login');
+        }
+    };
+
     return (
         <div className="bg-black text-white flex min-h-screen flex-col items-center pt-16 sm:justify-center sm:pt-0">
             <a href="#">
@@ -22,9 +50,25 @@ export default function Login() {
                         </p>
                     </div>
                     <div className="p-6 pt-0">
-                        <form>
-                            <Input type="text" name="username" label="E-mail" />
-                            <Input type="password" name="password" label="Senha" />
+                        <form onSubmit={handleSubmit}>
+                            <Input
+                                type="text"
+                                name="email"
+                                label="E-mail"
+                                value={form.email}
+                                onChange={handleChange}
+                            />
+                            <Input
+                                type="password"
+                                name="senha"
+                                label="Senha"
+                                value={form.senha}
+                                onChange={handleChange}
+                            />
+
+                            {error && (
+                                <div className="text-red-400 text-sm mt-2">{error}</div>
+                            )}
 
                             <div className="mt-4 flex items-center justify-start gap-x-2">
                                 <Button variant="secondary" as="a" href="/register">

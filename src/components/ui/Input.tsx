@@ -1,10 +1,12 @@
 interface InputProps {
     type: 'text' | 'password';
     name: string;
+    value?: string;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     label: string;
 }
 
-export default function Input({ type, name, label }: InputProps) {
+export default function Input({ type, name, label, value, onChange }: InputProps) {
     return (
         <div className="mt-4">
             <div>
@@ -19,6 +21,8 @@ export default function Input({ type, name, label }: InputProps) {
                         <input
                             type={type}
                             name={name}
+                            value={value}
+                            onChange={onChange}
                             className="block w-full border-0 bg-transparent p-0 text-sm file:my-1 placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground"
                         />
                     </div>
