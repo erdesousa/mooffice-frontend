@@ -4,17 +4,20 @@ import Button from "../../components/ui/Button";
 import StateSelect from "../../components/ui/StateSelect";
 import { Link } from "react-router-dom";
 import logo from "../../assets/Group 2260.svg";
+import { register } from "../../api/authApi";
 
 export default function Register() {
     const [form, setForm] = useState({
-        nomeEmpresa: "",
-        cnpj: "",
-        telefone: "",
-        email: "",
-        endereco: "",
-        cidade: "",
-        estado: ""
+        nome_empresa: '',
+        cnpj: '',
+        telefone: '',
+        email: '',
+        endereco: '',
+        cidade: '',
+        estado: '' 
     });
+
+    const [error, setError] = useState<string | null>(null);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setForm({
@@ -23,10 +26,17 @@ export default function Register() {
         });
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Chame sua API de cadastro aqui
-        console.log(form);
+        setError(null);
+
+        try {
+            const response = await register(form);
+
+            console.log("Empresa cadastrada com sucesso:", response);
+        } catch (err: any) {
+            setError(err.message || "Erro ao cadastrar empresa");
+        }
     };
 
     return (
@@ -50,9 +60,9 @@ export default function Register() {
                         <form onSubmit={handleSubmit}>
                             <Input
                                 type="text"
-                                name="nomeEmpresa"
+                                name="nome_empresa"
                                 label="Nome da Empresa"
-                                value={form.nomeEmpresa}
+                                value={form.nome_empresa}
                                 onChange={handleChange}
                             />
                             <div className="flex gap-4">
