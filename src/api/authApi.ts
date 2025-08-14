@@ -1,53 +1,15 @@
+import type { EnterpriseInput, Enterprise } from '../types/cadastro/empresa';
+import type { UserInput, User } from '../types/cadastro/usuario';
+import type { ApiResponse } from '../types/api/response';
+import { ENDPOINTS } from './endpoints';
 import api from './axiosConfig';
 
-interface loginData {
-    email: string;
-    senha: string;
-};
-
-interface registerData {
-    nome_empresa: string;
-    cnpj: string;
-    telefone: string;
-    email: string;
-    endereco: string;
-    cidade: string;
-    estado: string;
-};
-
-interface User {
-    id_usuario: string;
-    nome: string;
-    email: string;
-    senha: string;
-    data_cadastro: string;
-    fk_empresa: string;
-};
-
-interface Enterprise {
-    id_empresa: string;
-    nome_empresa: string;
-    cnpj: string;
-    telefone: string;
-    endereco: string;
-    cidade: string;
-    estado: string;
-}
-
-interface responseLogin {
-    usuario: User;
-};
-
-interface responseRegister {
-    enterprise: Enterprise;
-};
-
-export const login = async (data: loginData): Promise<responseLogin> => {
-    const response = await api.post<responseLogin>('/usuarios/login', data);
+export const login = async (data: UserInput): Promise<ApiResponse<User>> => {
+    const response = await api.post<ApiResponse<User>>(ENDPOINTS.LOGIN_USER, data);
     return response.data;
 };
 
-export const register = async (data: registerData): Promise<responseRegister> => {
-    const response = await api.post<responseRegister>('/empresas/cadastrar', data);
+export const register = async (data: EnterpriseInput): Promise<ApiResponse<Enterprise>> => {
+    const response = await api.post<ApiResponse<Enterprise>>(ENDPOINTS.REGISTER_ENTERPRISE, data);
     return response.data;
 };

@@ -1,20 +1,14 @@
 import axios, { type AxiosResponse, AxiosError } from "axios";
 import type { AxiosInstance } from "axios";
-
-interface ApiError {
-    message: string;
-    statusCode?: number;
-    data?: any;
-}
+import type { ApiError } from "../types/api/error";
 
 const axiosConfig: AxiosInstance = axios.create({
-    baseURL: "http://localhost:3333",
+    baseURL: import.meta.env.VITE_API_URL,
     timeout: 10000,
     headers: {
         "Content-Type": "application/json",
     },
 });
-
 
 axiosConfig.interceptors.response.use(
     (response: AxiosResponse) => response,
