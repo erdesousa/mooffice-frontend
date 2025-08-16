@@ -3,7 +3,6 @@ export interface UserInput {
     senha: string;
 };
 
-
 export interface User {
     id_usuario: string;
     nome: string;

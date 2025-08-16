@@ -1,34 +1,22 @@
 import logo from '../../assets/Group 2260.svg';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
-import { useState } from 'react';
+import { useForm } from "react-hook-form";
+import validator from 'validator';
+import type { UserInput } from '../../types/cadastro/usuario';
 import { login } from '../../api/authApi';
 import { Link } from 'react-router-dom';
 
 export default function Login() {
-    const [form, setForm] = useState({
-        email: '',
-        senha: ''
-    });
 
-    const [error, setError] = useState<string | null>(null);
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
+    const { register, handleSubmit, formState: {errors} } = useForm<UserInput>();
+ 
+    const onSubmit = async (data: UserInput) => {
         try {
-            const response = await login(form);
-            // Faça o que quiser com response (ex: salvar usuário, redirecionar, etc)
+            const response = await login(data);
             console.log('Login realizado:', response);
-        } catch (err: any) {
-            setError(err.message || 'Erro ao fazer login');
+        } catch (error) {
+            console.log('Erro no login:', error);
         }
     };
 
@@ -51,33 +39,26 @@ export default function Login() {
                         </p>
                     </div>
                     <div className="p-6 pt-0">
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit(onSubmit)}>
                             <Input
                                 type="text"
-                                name="email"
                                 label="E-mail"
-                                value={form.email}
-                                onChange={handleChange}
+                                {...register('email', {required: true, validate: (value) => validator.isEmail(value)})}
                             />
+                            {errors?.email?.type === 'required' && <p className="text-red-700 mt-2 text-xs">Email é obrigatório</p>}
+                            {errors?.email?.type === 'validate' && <p className="text-red-700 mt-2 text-xs">Email inválido</p>}
                             <Input
                                 type="password"
-                                name="senha"
                                 label="Senha"
-                                value={form.senha}
-                                onChange={handleChange}
+                                {...register('senha', {required: true})}
                             />
-
-                            {error && (
-                                <div className="text-red-400 text-sm mt-2">{error}</div>
-                            )}
+                            {errors?.senha?.type === 'required' && <p className="text-red-700 mt-2">Senha é obrigatória</p>}
 
                             <div className="mt-4 flex items-center justify-start gap-x-2">
                                 <Button variant="secondary" as="a" href="/register">
                                     <Link to="/register">Register</Link>
                                 </Button>
-                                <Button type="submit" variant="primary">
-                                    <Link to="">Log in</Link>
-                                </Button>
+                                <Button type="submit" variant="primary">Log in</Button>
                             </div>
                         </form>
                     </div>
