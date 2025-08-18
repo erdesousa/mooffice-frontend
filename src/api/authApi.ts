@@ -9,7 +9,7 @@ export const login = async (data: UserInput): Promise<ApiResponse<User>> => {
     return response.data;
 };
 
-export const register = async (data: EnterpriseInput): Promise<ApiResponse<Enterprise>> => {
+export const cadastro = async (data: EnterpriseInput): Promise<ApiResponse<Enterprise>> => {
     const response = await api.post<ApiResponse<Enterprise>>(ENDPOINTS.REGISTER_ENTERPRISE, data);
     return response.data;
 };
