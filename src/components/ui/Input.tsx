@@ -1,12 +1,11 @@
-interface InputProps {
+import type { InputHTMLAttributes } from "react";
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     type: 'text' | 'password';
-    name: string;
-    value?: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     label: string;
 }
 
-export default function Input({ type, name, label, value, onChange }: InputProps) {
+export default function Input({ type, label, ...rest }: InputProps) {
     return (
         <div className="mt-4">
             <div>
@@ -20,9 +19,7 @@ export default function Input({ type, name, label, value, onChange }: InputProps
                     <div className={type === 'password' ? 'flex items-center' : ''}>
                         <input
                             type={type}
-                            name={name}
-                            value={value}
-                            onChange={onChange}
+                            {...rest}
                             className="block w-full border-0 bg-transparent p-0 text-sm file:my-1 placeholder:text-muted-foreground/90 focus:outline-none focus:ring-0 sm:leading-7 text-foreground"
                         />
                     </div>

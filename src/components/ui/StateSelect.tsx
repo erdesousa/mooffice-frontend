@@ -1,9 +1,6 @@
-import React from "react";
+import type { InputHTMLAttributes } from "react";
 
-interface StateSelectProps {
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-    name: string;
+interface StateSelectProps extends InputHTMLAttributes<HTMLSelectElement> {
     label: string;
 }
 
@@ -11,7 +8,7 @@ const estados = [
     "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"
 ];
 
-export default function StateSelect({ value, onChange, name, label }: StateSelectProps) {
+export default function StateSelect({ value, label, ...rest }: StateSelectProps) {
     return (
         <div className="mt-4">
             <div>
@@ -20,9 +17,7 @@ export default function StateSelect({ value, onChange, name, label }: StateSelec
                         {label}
                     </label>
                     <select
-                        name={name}
-                        value={value}
-                        onChange={onChange}
+                        {...rest}
                         className="block w-full border-0 bg-transparent p-0 text-sm focus:outline-none focus:ring-0 text-foreground"
                     >
                         <option value="" className="text-black bg-white">Selecione</option>

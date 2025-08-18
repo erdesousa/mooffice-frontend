@@ -1,41 +1,23 @@
-import { useState } from "react";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
 import StateSelect from "../../components/ui/StateSelect";
+import { useForm } from "react-hook-form";
+import validator from 'validator';
 import { Link } from "react-router-dom";
+import type { EnterpriseInput } from '../../types/cadastro/empresa';
 import logo from "../../assets/Group 2260.svg";
-import { register } from "../../api/authApi";
+import { cadastro } from "../../api/authApi";
 
 export default function Register() {
-    const [form, setForm] = useState({
-        nome_empresa: '',
-        cnpj: '',
-        telefone: '',
-        email: '',
-        endereco: '',
-        cidade: '',
-        estado: '' 
-    });
 
-    const [error, setError] = useState<string | null>(null);
+    const { register, handleSubmit, formState: { errors } } = useForm<EnterpriseInput>();
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError(null);
-
+    const onSubmit = async (data: EnterpriseInput) => {
         try {
-            const response = await register(form);
-
+            const response = await cadastro(data);
             console.log("Empresa cadastrada com sucesso:", response);
-        } catch (err: any) {
-            setError(err.message || "Erro ao cadastrar empresa");
+        } catch (error) {
+            console.log('Erro no cadastro:', error);
         }
     };
 
@@ -57,64 +39,67 @@ export default function Register() {
                         </p>
                     </div>
                     <div className="p-6 pt-0">
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit(onSubmit)}>
                             <Input
                                 type="text"
-                                name="nome_empresa"
                                 label="Nome da Empresa"
-                                value={form.nome_empresa}
-                                onChange={handleChange}
+                                {...register('nome_empresa', { required: true })}
                             />
+                            {errors?.nome_empresa?.type === 'required' && <p className="text-red-700 mt-2 text-xs">Nome da empresa é obrigatório</p>}
+
                             <div className="flex gap-4">
                                 <div className="flex-1">
                                     <Input
                                         type="text"
-                                        name="cnpj"
                                         label="CNPJ"
-                                        value={form.cnpj}
-                                        onChange={handleChange}
+                                        {...register('cnpj', { required: true })}
                                     />
+                                    {errors?.cnpj?.type === 'required' && <p className="text-red-700 mt-2 text-xs">CNPJ é obrigatório</p>}
                                 </div>
                                 <Input
                                     type="text"
-                                    name="telefone"
                                     label="Telefone"
-                                    value={form.telefone}
-                                    onChange={handleChange}
+                                    {...register('telefone', { required: true })}
                                 />
+                                {errors?.telefone?.type === 'required' && <p className="text-red-700 mt-2 text-xs">Telefone é obrigatório</p>}
                             </div>
+
                             <Input
                                 type="text"
-                                name="email"
                                 label="Email"
-                                value={form.email}
-                                onChange={handleChange}
+                                {...register('email', { required: true, validate: (value) => validator.isEmail(value) })}
                             />
+                            {errors?.email?.type === 'required' && <p className="text-red-700 mt-2 text-xs">Email é obrigatório</p>}
+                            {errors?.email?.type === 'validate' && <p className="text-red-700 mt-2 text-xs">Email inválido</p>}
+
                             <Input
                                 type="text"
-                                name="endereco"
                                 label="Endereço"
-                                value={form.endereco}
-                                onChange={handleChange}
+                                {...register('endereco', { required: true })}
                             />
+                            {errors?.endereco?.type === 'required' && <p className="text-red-700 mt-2 text-xs">Endereço é obrigatório</p>}
+
                             <div className="flex gap-4">
                                 <div className="flex-1">
                                     <Input
                                         type="text"
-                                        name="cidade"
                                         label="Cidade"
-                                        value={form.cidade}
-                                        onChange={handleChange}
+                                        {...register('cidade', { required: true })}
                                     />
+                                    {errors?.cidade?.type === 'required' && <p className="text-red-700 mt-2 text-xs">Cidade é obrigatória</p>}
                                 </div>
                                 <StateSelect
-                                    name="estado"
                                     label="Estado"
-                                    value={form.estado}
-                                    onChange={handleChange}
+                                    {...register('estado', {
+                                        required: true, validate: (value) => {
+                                            return value !== "0"
+                                        }
+                                    })}
                                 />
-
+                                {errors?.estado?.type === 'required' && <p className="text-red-700 mt-2 text-xs">Estado é obrigatório</p>}
+                                {errors?.estado?.type === 'validate' && <p className="text-red-700 mt-2 text-xs">Estado inválido</p>}
                             </div>
+
                             <div className="mt-6 flex items-center gap-x-2">
                                 <Button type="submit" variant="primary">
                                     Cadastrar
