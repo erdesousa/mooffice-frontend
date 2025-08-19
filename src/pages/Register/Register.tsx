@@ -3,19 +3,27 @@ import Button from "../../components/ui/Button";
 import StateSelect from "../../components/ui/StateSelect";
 import { useForm } from "react-hook-form";
 import validator from 'validator';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { EnterpriseInput } from '../../types/cadastro/empresa';
 import logo from "../../assets/Group 2260.svg";
 import { cadastro } from "../../api/authApi";
+import { useEmpresaStore } from "../../store/useEmpresaStore";
 
 export default function Register() {
 
     const { register, handleSubmit, formState: { errors } } = useForm<EnterpriseInput>();
 
+    const navigate = useNavigate();
+    const setEmpresaId = useEmpresaStore((state) => state.setEmpresaId);
+
     const onSubmit = async (data: EnterpriseInput) => {
         try {
             const response = await cadastro(data);
+
             console.log("Empresa cadastrada com sucesso:", response);
+            
+            setEmpresaId(response.data.id_empresa);
+            navigate("/dashboard");
         } catch (error) {
             console.log('Erro no cadastro:', error);
         }
