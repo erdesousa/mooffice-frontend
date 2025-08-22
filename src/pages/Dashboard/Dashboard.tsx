@@ -1,41 +1,48 @@
-import { useState } from 'react';
-import Navbar from '../../components/ui/Navbar';
-import Sidebar from '../../components/ui/Sidebar';
-import MainContent from '../../components/ui/MainContent';
+import { Sidebar } from "../../components/Sidebar/Sidebar";
+import { Outlet } from "react-router-dom";
+// import { Menu } from "lucide-react";
+// import Button from "@/components/ui/Button";
+import { useState } from "react";
 
-function Dashboard() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState('Dashboard');
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
-
-  const handleItemClick = (label: string) => {
-    setActiveItem(label);
-    // Em dispositivos móveis, fecha a sidebar após clicar
-    if (window.innerWidth < 1024) {
-      setIsSidebarOpen(false);
-    }
-  };
+export default function Dashboard() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="bg-black h-screen overflow-hidden flex">
-      <div className="bg-blue-500 w-full h-full">
-        <Navbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+    <div className="min-h-screen bg-dashboard-bg bg-black">
+      <Sidebar />
+      
+      {/* Mobile sidebar toggle */}
+      <div className="md:hidden fixed top-4 left-4 z-50">
+        {/* <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+        >
+          <Menu className="h-4 w-4" />
+        </Button> */}
       </div>
 
-      <div className="bg-amber-700 overflow-hidden w-full h-full">
-        <Sidebar 
-          isOpen={isSidebarOpen} 
-          onItemClick={handleItemClick} 
-          activeItem={activeItem} 
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div 
+          className="md:hidden fixed inset-0 z-40 bg-black/50"
+          onClick={() => setSidebarOpen(false)}
         />
-        
-        <MainContent activeItem={activeItem} />
+      )}
+
+      {/* Mobile sidebar */}
+      <div className={`md:hidden fixed left-0 top-0 z-50 h-screen w-64 bg-sidebar border-r border-dashboard-border transform transition-transform duration-300 ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
+        <Sidebar />
+      </div>
+
+      {/* Main content */}
+      <div className="md:ml-64">
+        <main className="p-4 md:p-8">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
 }
-
-export default Dashboard;

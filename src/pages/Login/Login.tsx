@@ -50,6 +50,7 @@ export default function Login() {
                             <Input
                                 type="password"
                                 label="Senha"
+                                autoComplete="new-password"
                                 {...register('senha', {required: true})}
                             />
                             {errors?.senha?.type === 'required' && <p className="text-red-700 mt-2">Senha é obrigatória</p>}
